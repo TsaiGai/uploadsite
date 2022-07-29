@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Upload File</title>   
+    </head>
+    <body>
+    <!-- List of uploaded documents -->
+
+        <!-- Upload form. Note enctype attribute! -->
+        <h1>
+            Upload Files
+        </h1>
+        <a href="{% url 'home:home' %}">
+            home
+        </a>
+        <form action="{% url 'forecast:forecast' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ form.file }}</p>
+            <p><input type="submit" value="Upload" /></p>
+        </form>
+        {% if data %}
+            <table>
+                <tr>
+                    <th>
+                        date
+                    </th>
+                    <th>
+                        ooi
+                    </th>
+                    <th>
+                        lts
+                    </th>
+                    <th>
+                        rev
+                    </th>
+                    <th>
+                        rod
+                    </th>
+                </tr>
+                {% for row in data %}
+                    <tr>
+                        <td>
+                            {{ row.date }}
+                        </td>
+                        <td>
+                            {{ row.ooi }}
+                        </td>
+                        <td>
+                            {{ row.lts }}
+                        </td>
+                        <td>
+                            {{ row.trr }}
+                        </td>
+                        <td>
+                            {{ row.rod }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </body>
+</html> 

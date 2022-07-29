@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Upload File</title>   
+    </head>
+    <body>
+    <!-- List of uploaded documents -->
+
+        <!-- Upload form. Note enctype attribute! -->
+        <h1>
+            Upload Files
+        </h1>
+        <a href="{% url 'home:home' %}">
+            home
+        </a>
+        <form action="{% url 'creditcardrep:creditcard' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ form.file }}</p>
+            <p><input type="submit" value="Upload" /></p>
+        </form>
+        {% if data %}
+            <table>
+                <tr>
+                    <th>
+                        code
+                    </th>
+                    <th>
+                        account
+                    </th>
+                    <th>
+                        last four
+                    </th>
+                    <th>
+                        user
+                    </th>
+                    <th>
+                        vendor id
+                    </th>
+                    <th>
+                        amount
+                    </th>
+                </tr>
+                {% for row in data %}
+                    <tr>
+                        <td>
+                            {{ row.code }}
+                        </td>
+                        <td>
+                            {{ row.account }}
+                        </td>
+                        <td>
+                            {{ row.last_four }}
+                        </td>
+                        <td>
+                            {{ row.user }}
+                        </td>
+                        <td>
+                            {{ row.vendor_id }}
+                        </td>
+                        <td>
+                            {{ row.amount }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </body>
+</html> 
