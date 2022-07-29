@@ -1,9 +1,12 @@
 from django.db import models
 
 # Create your models here.
+
+# creates a filefield model
 class UploadedFile(models.Model):
 	file = models.FileField(upload_to='')
 
+# creates a model for the elements of a forecast
 class Forecast(models.Model):
 	date = models.DateTimeField()
 	ooi = models.IntegerField()

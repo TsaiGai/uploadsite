@@ -1,9 +1,12 @@
 from django.db import models
 
 # Create your models here.
+
+# creates a filefield model
 class UploadedFile(models.Model):
 	file = models.FileField(upload_to='')
 
+# creates a model for the elements of a tax recap summary
 class TaxRecapSummary(models.Model):
 	date = models.DateTimeField()
 	revenue = models.DecimalField(max_digits=7, decimal_places=2)

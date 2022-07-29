@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 
+# establishes the name of the app
 app_name = 'creditcardrep'
 
 urlpatterns = [
+    # creates a url for credit card reports
     path('', views.credit_card_upload, name='creditcard')
 ]

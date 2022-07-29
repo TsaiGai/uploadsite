@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 
+# establishes the name of the app
 app_name = 'forecast'
 
 urlpatterns = [
+    # creates a url for the forecast page
     path('', views.forecast_upload, name='forecast')
 ]

@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 
+# establishes the name of the app
 app_name = 'uploadapp'
 
 urlpatterns = [
+    # creates a url for tax recaps
     path('', views.tax_recap_upload, name='taxrecap')
 ]
