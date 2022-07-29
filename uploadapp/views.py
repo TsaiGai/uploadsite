@@ -68,7 +68,6 @@ def tax_recap_upload(request):
 
 # this function verifies if the string given is a viable date
 def is_date(date):
-			return True
     if type(date) == str:
         # removes the dash
         date = date.split('-')
