@@ -105,27 +105,22 @@ def is_code(code):
 # this function selects the last four digits of the card number
 def get_last_four(string):
     string = str(string)
-    string = string.split()
-    for num in string:
-        remove_par(num)
-        if num.isdigit():
-            # converts the input to a string
-            num = str(remove_par(num))
+    paren_pos = string.find('(') + 1
 
-    return num
+    if paren_pos > 0:
+        string = string[paren_pos:(paren_pos + 4)]
+        return string
+    else:
+        if string.isnumeric() and len(string) == 4:
+            return string
+        else:
+            return ""
 
 def vendor_exists(string):
     if string:
         return str(string)
     else:
         return ""
-
-# this function removes parenthesis from the input
-def remove_par(string):
-    string = str(string)
-    string = string[1:].replace(')', '')
-
-    return str(string)
 
 # this function converts a string to a float
 def str_to_float(amount):
@@ -139,7 +134,7 @@ def str_to_float(amount):
         amount = amount.replace('$', '')
 
     if amount[0] == '(':
-        amount = remove_par(amount)
+        amount = amount[1:].replace(')', '')
         amount = float(amount)
     else:
         amount = float(amount)
