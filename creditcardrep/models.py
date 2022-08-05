@@ -8,9 +8,11 @@ class UploadedFile(models.Model):
 
 # creates a model for the elements of a credit card report
 class CreditCard(models.Model):
+	date = models.DateTimeField()
+	prop_id = models.CharField(max_length=5)
 	code = models.CharField(max_length=2)
 	account = models.CharField(max_length=10)
 	last_four = models.CharField(max_length=4)
 	user = models.CharField(max_length=8)
 	vendor_id = models.CharField(max_length=8)
-	amount = models.DecimalField(max_digits=6, decimal_places=2)
+	amount = models.DecimalField(max_digits=7, decimal_places=2)

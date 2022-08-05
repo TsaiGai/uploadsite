@@ -25,6 +25,12 @@
             <table>
                 <tr>
                     <th>
+                        date
+                    </th>
+                    <th>
+                        prop_id
+                    </th>
+                    <th>
                         code
                     </th>
                     <th>
@@ -45,6 +51,12 @@
                 </tr>
                 {% for row in data %}
                     <tr>
+                        <td>
+                            {{ row.date }}
+                        </td>
+                        <td>
+                            {{ row.prop_id }}
+                        </td>
                         <td>
                             {{ row.code }}
                         </td>

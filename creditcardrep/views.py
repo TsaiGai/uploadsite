@@ -23,62 +23,80 @@ def credit_card_upload(request):
             # converts the uploaded (excel) file to a mutable table of values
             data = list(openpyxl.load_workbook(fp).active.iter_rows(values_only=True))
 
+            if is_date(data[1][0]):
+                date = get_date(data[1][0])
+                date = dt.strptime(date, '%m/%d/%Y')
+            
+            curr_date = date
+
             # iterates through each row of the table
             for i, row in enumerate(data):
+                if '-' in str(row[1]):
+                    prop_id = str(row[1])
+                    ult_prop_id = prop_id[:5]
+
                 # verifies if the first data value is a code
-                if is_code(str(row[0])):
+                if is_code(str(row[1])):
                     ''' Some of the rows of the excel file have its data on different lines.
                     Therefore, if a row is missing data, the data on the next line is
                     processed instead.'''
-                    if row[3]:
+                    if row[4]:
                         # converts the variables to strings
-                        code = str(row[0])
-                        account = str(row[13])
+                        code = str(row[1])
+                        account = str(row[19])
                         # grabs the last four digits of the card number
-                        last_four = get_last_four(row[15])
+                        last_four = get_last_four(row[22])
                         # converts the variables to strings
-                        user = str(row[22])
-                        vendor_id = str(row[25])
+                        user = str(row[33])
+                        vendor_id = vendor_exists(row[38])
                         ''' For the amount, a positive or negative float is returned
                         depending on the column its placed in.
                         '''
                         # negative amount
-                        if row[28]:
-                            amount = str_to_float(row[28])
+                        if row[41]:
+                            amount = str_to_float(row[41])
                             amount = -abs(amount)
                         # positive amount
                         else:
-                            amount = remove_par(row[31])
-                            amount = str_to_float(amount)
+                            if row[45]:
+                                amount = remove_par(row[45])
+                                amount = str_to_float(amount)
+                            else:
+                                amount = 0.00
                     else:
                         # grabs the data from the row below
                         row = data[i + 1]
                         # converts variables to strings
-                        code = str(row[0])
-                        account = str(row[13])
+                        code = str(row[1])
+                        account = str(row[19])
                         # last four of card number
-                        last_four = get_last_four(row[15])
+                        last_four = get_last_four(row[22])
                         # variables to strings
-                        user = str(row[22])
-                        vendor_id = str(row[25])
+                        user = str(row[33])
+                        vendor_id = vendor_exists(row[38])
                         # negative amount
-                        if row[28]:
-                            amount = str_to_float(row[28])
+                        if row[41]:
+                            amount = str_to_float(row[41])
                             amount = -abs(amount)
                         # positive amount
                         else:
-                            amount = remove_par(row[31])
-                            amount = str_to_float(amount)
+                            if row[45]:
+                                amount = remove_par(row[45])
+                                amount = str_to_float(amount)
+                            else:
+                                amount = 0.00
 
                     # creates and saves the entry (row)
                     new_data_entry = CreditCard(
+                        date = curr_date,
+                        prop_id = ult_prop_id,
                         code = code,
                         account = account,
                         last_four = last_four,
                         user = user,
                         vendor_id = vendor_id,
                         amount = amount,
-            		)
+                	)
 
                     new_data_entry.save()
 
@@ -93,33 +111,60 @@ def credit_card_upload(request):
 
     return render(request, 'credit_card_upload.html', context)
 
+def is_date(date):
+    if date:
+        date = date.split()
+        if date[0] == "Credit":
+            return True
+
+def get_date(string):
+    string = string.split()
+    if string[4] == string[6]:
+        string = string[4]
+
+    return string
+
 # this function verifies if the input given is a code
 def is_code(code):
     # a code begins with an A, D M, or V
     if code[0] in ('A', 'D', 'M', 'V'):
         return True
-    else:
-        return False
 
 # this function selects the last four digits of the card number
-def get_last_four(num):
-    # removes everything before the digits
-    num = num[3:]
-    # removes parenthesis
-    num = remove_par(num)
-    # converts the input to a string
-    num = str(num)
+def get_last_four(string):
+    string = str(string)
+    string = string.split()
+    for num in string:
+        remove_par(num)
+        if num.isdigit():
+            # converts the input to a string
+            num = str(remove_par(num))
+
     return num
 
+def vendor_exists(string):
+    if string:
+        return str(string)
+    else:
+        return ""
+
 # this function removes parenthesis from the input
-def remove_par(num):
-    num = num[1:].replace(')', '')
-    num = str(num)
-    return num
+def remove_par(string):
+    string = str(string)
+    string = string[1:].replace(')', '')
+
+    return str(string)
 
 # this function converts a string to a float
 def str_to_float(amount):
+    amount = str(amount)
+
+    if ',' in amount:
+        amount = amount.replace(',', '')
+
     # removes the $ sign
-    amount = amount[1:]
+    if '$' in amount:
+        amount = amount[1:]
+
     amount = float(amount)
     return amount
