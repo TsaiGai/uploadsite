@@ -36,50 +36,29 @@ def credit_card_upload(request):
                     ult_prop_id = prop_id[:5]
 
                 # verifies if the first data value is a code
-                if is_code(str(row[1])):
+                if is_code(str(row[1])) and row[4]:
                     ''' Some of the rows of the excel file have its data on different lines.
                     Therefore, if a row is missing data, the data on the next line is
                     processed instead.'''
-                    if row[4]:
-                        # converts the variables to strings
-                        code = str(row[1])
-                        account = str(row[19])
-                        # grabs the last four digits of the card number
-                        last_four = get_last_four(row[22])
-                        # converts the variables to strings
-                        user = str(row[33])
-                        vendor_id = vendor_exists(row[38])
-                        ''' For the amount, a positive or negative float is returned
-                        depending on the column its placed in.
-                        '''
-                        if row[40]:
-                            amount = str_to_float(row[40])
-                        elif row[41]:
-                            amount = str_to_float(row[41])
-                        elif row[44]:
-                            amount = str_to_float(row[44])
-                        elif row[45]:
-                            amount = str_to_float(row[45])
-                    else:
-                        # grabs the data from the row below
-                        row = data[i + 1]
-                        # converts variables to strings
-                        code = str(row[1])
-                        account = str(row[19])
-                        # last four of card number
-                        last_four = get_last_four(row[22])
-                        # variables to strings
-                        user = str(row[33])
-                        vendor_id = vendor_exists(row[38])
-
-                        if row[40]:
-                            amount = str_to_float(row[40])
-                        elif row[41]:
-                            amount = str_to_float(row[41])
-                        elif row[44]:
-                            amount = str_to_float(row[44])
-                        elif row[45]:
-                            amount = str_to_float(row[45])
+                    # converts the variables to strings
+                    code = str(row[1])
+                    account = str(row[19])
+                    # grabs the last four digits of the card number
+                    last_four = get_last_four(row[22])
+                    # converts the variables to strings
+                    user = str(row[33])
+                    vendor_id = vendor_exists(row[38])
+                    ''' For the amount, a positive or negative float is returned
+                    depending on the column its placed in.
+                    '''
+                    if row[40]:
+                        amount = str_to_float(row[40])
+                    elif row[41]:
+                        amount = str_to_float(row[41])
+                    elif row[44]:
+                        amount = str_to_float(row[44])
+                    elif row[45]:
+                        amount = str_to_float(row[45])
 
                     # creates and saves the entry (row)
                     new_data_entry = CreditCard(
