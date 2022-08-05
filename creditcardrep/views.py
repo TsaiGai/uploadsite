@@ -52,17 +52,14 @@ def credit_card_upload(request):
                         ''' For the amount, a positive or negative float is returned
                         depending on the column its placed in.
                         '''
-                        # negative amount
-                        if row[41]:
+                        if row[40]:
+                            amount = str_to_float(row[40])
+                        elif row[41]:
                             amount = str_to_float(row[41])
-                            amount = -abs(amount)
-                        # positive amount
-                        else:
-                            if row[45]:
-                                amount = remove_par(row[45])
-                                amount = str_to_float(amount)
-                            else:
-                                amount = 0.00
+                        elif row[44]:
+                            amount = str_to_float(row[44])
+                        elif row[45]:
+                            amount = str_to_float(row[45])
                     else:
                         # grabs the data from the row below
                         row = data[i + 1]
@@ -74,17 +71,15 @@ def credit_card_upload(request):
                         # variables to strings
                         user = str(row[33])
                         vendor_id = vendor_exists(row[38])
-                        # negative amount
-                        if row[41]:
+
+                        if row[40]:
+                            amount = str_to_float(row[40])
+                        elif row[41]:
                             amount = str_to_float(row[41])
-                            amount = -abs(amount)
-                        # positive amount
-                        else:
-                            if row[45]:
-                                amount = remove_par(row[45])
-                                amount = str_to_float(amount)
-                            else:
-                                amount = 0.00
+                        elif row[44]:
+                            amount = str_to_float(row[44])
+                        elif row[45]:
+                            amount = str_to_float(row[45])
 
                     # creates and saves the entry (row)
                     new_data_entry = CreditCard(
@@ -114,8 +109,7 @@ def credit_card_upload(request):
 def is_date(date):
     if date:
         date = date.split()
-        if date[0] == "Credit":
-            return True
+        return date[0] == "Credit"
 
 def get_date(string):
     string = string.split()
@@ -127,8 +121,7 @@ def get_date(string):
 # this function verifies if the input given is a code
 def is_code(code):
     # a code begins with an A, D M, or V
-    if code[0] in ('A', 'D', 'M', 'V'):
-        return True
+    return code[0] in ('A', 'D', 'M', 'V')
 
 # this function selects the last four digits of the card number
 def get_last_four(string):
@@ -164,7 +157,13 @@ def str_to_float(amount):
 
     # removes the $ sign
     if '$' in amount:
-        amount = amount[1:]
+        amount = amount.replace('$', '')
 
-    amount = float(amount)
+    if amount[0] == '(':
+        amount = remove_par(amount)
+        amount = float(amount)
+    else:
+        amount = float(amount)
+        amount = -abs(amount)
+
     return amount
