@@ -22,5 +22,6 @@ app_name = 'creditcardrep'
 
 urlpatterns = [
     # creates a url for credit card reports
-    path('', views.credit_card_upload, name='creditcard')
+    path('', views.credit_card_upload, name='creditcard'),
+    path('search/', views.credit_card_search, name='creditcardsearch'),
 ]

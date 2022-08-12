@@ -15,69 +15,13 @@
         <a href="{% url 'home:home' %}">
             home
         </a>
+        <a href="{% url 'creditcardrep:creditcardsearch' %}">
+            search
+        </a>
         <form action="{% url 'creditcardrep:creditcard' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <p>{{ form.file }}</p>
             <p><input type="submit" value="Upload" /></p>
         <!-- this form constructs a table on the website that displays the data from the file uploaded -->
-        </form>
-        {% if data %}
-            <table>
-                <tr>
-                    <th>
-                        date
-                    </th>
-                    <th>
-                        prop_id
-                    </th>
-                    <th>
-                        code
-                    </th>
-                    <th>
-                        account
-                    </th>
-                    <th>
-                        last four
-                    </th>
-                    <th>
-                        user
-                    </th>
-                    <th>
-                        vendor id
-                    </th>
-                    <th>
-                        amount
-                    </th>
-                </tr>
-                {% for row in data %}
-                    <tr>
-                        <td>
-                            {{ row.date }}
-                        </td>
-                        <td>
-                            {{ row.prop_id }}
-                        </td>
-                        <td>
-                            {{ row.code }}
-                        </td>
-                        <td>
-                            {{ row.account }}
-                        </td>
-                        <td>
-                            {{ row.last_four }}
-                        </td>
-                        <td>
-                            {{ row.user }}
-                        </td>
-                        <td>
-                            {{ row.vendor_id }}
-                        </td>
-                        <td>
-                            {{ row.amount }}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% endif %}
     </body>
 </html> 

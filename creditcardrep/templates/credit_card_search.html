@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Search File</title>
+        <style>
+            table, td, th {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+        </style>   
+    </head>
+    <body>
+    <!-- List of uploaded documents -->
+
+        <!-- Upload form. Note enctype attribute! -->
+        <h1>
+            Search Files
+        </h1>
+        <!-- creates a url to return to the home page -->
+        <a href="{% url 'home:home' %}">
+            home
+        </a>
+        <a href="{% url 'creditcardrep:creditcard' %}">
+            upload
+        </a>
+        <form action="{% url 'creditcardrep:creditcardsearch' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            Date {{ form.date }} &nbsp;&nbsp;
+            Prop ID {{ form.prop_id }} &nbsp;&nbsp;
+            Card Type {{ form.card }} &nbsp;&nbsp;
+            Sale/Refund {{ form.positive }} &nbsp;&nbsp;
+            Vendor ID {{ form.vendor_id }} &nbsp;&nbsp;
+            Last Four {{ form.last_four }} &nbsp;&nbsp;
+            <input type="submit" name="search" value="Search">
+        </form>
+        {% if qs %}
+            <table>
+                <tr>
+                    <th>
+                        date
+                    </th>
+                    <th>
+                        prop id
+                    </th>
+                    <th>
+                        code
+                    </th>
+                    <th>
+                        amount
+                    </th>
+                    <th>
+                        vendor id
+                    </th>
+                    <th>
+                        last four
+                    </th>
+                </tr>
+                {% for row in qs %}
+                    <tr>
+                        <td>
+                            {{ row.date }}
+                        </td>
+                        <td>
+                            {{ row.prop_id }}
+                        </td>
+                        <td>
+                            {{ row.code }}
+                        </td>
+                        <td>
+                            {{ row.amount }}
+                        </td>
+                        <td>
+                            {{ row.vendor_id }}
+                        </td>
+                        <td>
+                            {{ row.last_four }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            {{ form_errors }}    
+        {% endif %}
+    </body>
+</html> 
