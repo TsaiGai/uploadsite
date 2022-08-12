@@ -67,19 +67,21 @@ def credit_card_upload(request):
 
                         # grabs the last four digits of the card number
                         for value in row[21:]:
-                            if value and str(value).count('(') < 2:
-                                last_four = get_last_four(value)
-                                break
-                            else:
-                                last_fours = extract_last_four(str(value))
-                                last_four_1 = last_fours[0]
-                                last_four_2 = last_fours[1]
-                                break
+                            if value: 
+                                if str(value).count('(') < 2:
+                                    last_four = get_last_four(value)
+                                    break
+                                else:
+                                    last_fours = extract_last_four(str(value))
+                                    last_four_1 = last_fours[0]
+                                    last_four_2 = last_fours[1]
+                                    break
 
                         # converts the variables to strings
-                        for value in row[32:]:
+                        for value in row[27:]:
                             if value and (('/') not in str(value)):
                                 user = str(value)
+                                break
 
                         for value in row[36:39]:
                             if value:
@@ -170,38 +172,47 @@ def credit_card_upload(request):
                             code_2 = code[1]
 
                         for value in row[12:]:
-                            account = str(value)
-                            if len(account) > 11:
-                                account_1 = account[:10]
-                                account_2 = account[10:]
-                            else:
-                                break
+                            if value:
+                                account = str(value)
+                                if len(account) > 11:
+                                    account_1 = account[:10]
+                                    account_2 = account[10:]
+                                else:
+                                    break
 
                         # grabs the last four digits of the card number
-                        # if len(str(row[21])) or len(str(row[22])) <= 8:
                         for value in row[14:]:
-                            if value and (('(') in str(value)):
-                                last_four = get_last_four(value)
-                                break
-                        # else:
-                            # last_four_1 = get_last_four(str(row[21])) or get_last_four(str(row[22]))
+                            if value: 
+                                if str(value).count('(') == 1:
+                                    last_four = get_last_four(value)
+                                    break
+                                elif str(value).count('(') > 1:
+                                    last_fours = extract_last_four(str(value))
+                                    last_four_1 = last_fours[0]
+                                    last_four_2 = last_fours[1]
+                                    break
 
                         # converts the variables to strings
                         for value in row[21:]:
-                            if value and ('/') not in str(value):
+                            if value and (('/') not in str(value)):
                                 user = str(value)
                                 break
 
                         for value in row[24:]:
-                            if value and str(value).isnumeric():
-                                if len(str(value)) <= 9:
-                                    vendor_id = vendor_exists(value)
-                                    break
-                                else:
-                                    value = str(value)
-                                    vendor_id_1 = value[:8]
-                                    vendor_id_2 = value[8:]
-                                    break
+                            if value:
+                                if ('/') not in str(value):
+                                    if ('$') not in str(value):
+                                        if ('/') not in str(row[row.index(value) - 3]):
+                                            if len(str(value)) <= 9:
+                                                vendor_id = vendor_exists(value)
+                                                break
+                                            else:
+                                                value = str(value)
+                                                vendor_id_1 = value[:8]
+                                                vendor_id_2 = value[8:]
+                                                break
+                            else:
+                                vendor_id = 'None'
 
                         ''' For the amount, a positive or negative float is returned
                         depending on the column its placed in.
@@ -286,7 +297,6 @@ def extract_last_four(value):
     second_four = str(value)[second_par_i:(second_par_i + 4)]
 
     return (first_four, second_four)
-
 
 def vendor_exists(string):
     if string:
